@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 
 namespace WebGPUGen
 {
@@ -77,11 +76,7 @@ namespace WebGPUGen
         {
             Debug.WriteLine("Generating Delegates...");
 
-            var delegates = compilation.Typedefs
-                .Where(t => t.TypeKind == CppTypeKind.Typedef
-                       && t.ElementType is CppPointerType
-                       && ((CppPointerType)t.ElementType).ElementType.TypeKind == CppTypeKind.Function)
-                .ToList();
+            var delegates = Helpers.delegates;
 
             using (StreamWriter file = File.CreateText(Path.Combine(outputPath, "Delegates.cs")))
             {

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
-using System.Reflection.Metadata;
 using System.Text;
-using System.Threading.Tasks;
 using CppAst;
 
 namespace WebGPUGen
@@ -40,7 +37,7 @@ namespace WebGPUGen
 
             if (type is CppQualifiedType qualifiedType)
             {
-                return GetCsTypeName(qualifiedType.ElementType, isPointer);
+                return ConvertToCSharpType(qualifiedType.ElementType, isPointer);
             }
 
             if (type is CppEnum enumType)
@@ -77,13 +74,13 @@ namespace WebGPUGen
 
             if (type is CppArrayType arrayType)
             {
-                return GetCsTypeName(arrayType.ElementType, isPointer);
+                return ConvertToCSharpType(arrayType.ElementType, isPointer);
             }
 
             return string.Empty;
         }
 
-        public static object GetParametersSignature(CppFunction command, bool useTypes = true)
+        public static string GetParametersSignature(CppFunction command, bool useTypes = true)
         {
             StringBuilder signature = new StringBuilder();
             foreach (var parameter in command.Parameters)
@@ -168,79 +165,11 @@ namespace WebGPUGen
                 {
                     return GetCsTypeName(primitiveType, true);
                 }
-                else if (qualifiedType.ElementType is CppClass @classType)
-                {
-                    return GetCsTypeName(@classType, true);
-                }
-                else if (qualifiedType.ElementType is CppPointerType subPointerType)
-                {
-                    return GetCsTypeName(subPointerType, true) + "*";
-                }
-                else if (qualifiedType.ElementType is CppTypedef typedef)
-                {
-                    return GetCsTypeName(typedef, true);
-                }
-                else if (qualifiedType.ElementType is CppEnum @enum)
-                {
-                    return GetCsTypeName(@enum, true);
-                }
 
-                return GetCsTypeName(qualifiedType.ElementType, true);
+                return ConvertToCSharpType(qualifiedType.ElementType, true);
             }
 
-            return GetCsTypeName(pointerType.ElementType, true);
-        }
-
-        private static string GetCsTypeName(CppType type, bool isPointer = false)
-        {
-            if (type is CppPrimitiveType primitiveType)
-            {
-                return GetCsTypeName(primitiveType, isPointer);
-            }
-
-            if (type is CppQualifiedType qualifiedType)
-            {
-                return GetCsTypeName(qualifiedType.ElementType, isPointer);
-            }
-
-            if (type is CppEnum enumType)
-            {
-                var enumCsName = GetCsCleanName(enumType.Name);
-                if (isPointer)
-                    return enumCsName + "*";
-
-                return enumCsName;
-            }
-
-            if (type is CppTypedef typedef)
-            {
-                var typeDefCsName = GetCsCleanName(typedef.Name);
-                if (isPointer)
-                    return typeDefCsName + "*";
-
-                return typeDefCsName;
-            }
-
-            if (type is CppClass @class)
-            {
-                var className = GetCsCleanName(@class.Name);
-                if (isPointer)
-                    return className + "*";
-
-                return className;
-            }
-
-            if (type is CppPointerType pointerType)
-            {
-                return GetCsTypeName(pointerType);
-            }
-
-            if (type is CppArrayType arrayType)
-            {
-                return GetCsTypeName(arrayType.ElementType, isPointer);
-            }
-
-            return string.Empty;
+            return ConvertToCSharpType(pointerType.ElementType, true);
         }
 
         private static string GetCsCleanName(string name)
@@ -258,7 +187,7 @@ namespace WebGPUGen
 
             if (name.Contains("Flags"))
             {
-                return name.Remove(name.Count() - 5);
+                return name.Remove(name.Length - 5);
             }
 
             return name;
@@ -274,7 +203,7 @@ namespace WebGPUGen
             else if (value.EndsWith("F", StringComparison.OrdinalIgnoreCase))
                 constType = "float";
             else if (uint.TryParse(value, out _) || value.StartsWith("0x"))
-                constType = "float";
+                constType = "uint";
             return constType;
         }
 
