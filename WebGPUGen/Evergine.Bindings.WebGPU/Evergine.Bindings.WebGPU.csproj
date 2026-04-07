@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Copyright>Copyright (c) Evergine 2024</Copyright>
+    <Copyright>Copyright (c) Evergine 2026</Copyright>
     <Authors>Evergine Team</Authors>
     <Company>Plain Concepts</Company>
     <Description>Low-level bindings for WebGPU used in Evergine</Description>
     <RepositoryUrl>https://github.com/EvergineTeam/WebGPU.NET</RepositoryUrl>
     <PackageTags>WebGPU;Evergine;C#;DirectX;OpenGL;OpenGLES;Vulkan;Metal;2D;3D;AR;VR;MixedReality;Mobile</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>

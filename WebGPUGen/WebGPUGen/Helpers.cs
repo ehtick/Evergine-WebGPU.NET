@@ -222,8 +222,11 @@ namespace WebGPUGen
             if(constantValue.StartsWith("(") && constantValue.EndsWith(")"))
                 constantValue = constantValue.Substring(1, constantValue.Length - 2);
 
-            return constantValue.Replace("ULL", "UL");
+            constantValue = constantValue.Replace("ULL", "UL");
+            constantValue = constantValue.Replace("UINT32_MAX", "0xffffffffUL");
+            constantValue = constantValue.Replace("UINT64_MAX", "0xffffffffffffffffUL");
 
+            return constantValue;
         }
 
         private static string GetDelegatePointer(CppTypedef type)
